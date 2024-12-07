@@ -1,0 +1,73 @@
+PostListView API Documentation
+Endpoint: GET /api/posts/
+
+Retrieve a paginated list of posts with up to 3 comments for each post. Posts are ordered by timestamp, with the latest first.
+Query Parameters:
+
+    page (optional): Page number (default: 1).
+    page_size (optional): Number of posts per page (default: 3, max: 100).
+
+Example Request:
+
+GET /api/posts/?page=1&page_size=3
+
+Response Structure:
+
+    count: Total number of posts.
+    next: URL for the next page (if applicable).
+    previous: URL for the previous page (if applicable).
+    results: List of posts with the following fields:
+        id: Post ID.
+        text: Post content.
+        timestamp: Post timestamp.
+        comment_count: Number of comments on the post.
+        author_username: Post author's username.
+        comments: List of up to 3 comments, each with:
+            text: Comment content.
+            timestamp: Comment timestamp.
+            author_username: Comment author's username.
+
+Example Response:
+
+{
+    "count": 50,
+    "next": "http://example.com/api/posts/?page=2&page_size=3",
+    "previous": null,
+    "results": [
+        {
+            "id": "12345",
+            "text": "This is the first post",
+            "timestamp": "2024-12-07T10:00:00Z",
+            "comment_count": 5,
+            "author_username": "user1",
+            "comments": [
+                {
+                    "text": "Great post!",
+                    "timestamp": "2024-12-07T10:01:00Z",
+                    "author_username": "user2"
+                },
+                {
+                    "text": "Interesting point of view",
+                    "timestamp": "2024-12-07T10:02:00Z",
+                    "author_username": "user3"
+                },
+                {
+                    "text": "I agree with you",
+                    "timestamp": "2024-12-07T10:03:00Z",
+                    "author_username": "user4"
+                }
+            ]
+        }
+    ]
+}
+
+Notes:
+
+    Pagination: Default page_size is 3. Maximum page_size is 100. Use page and page_size to control the response.
+    Post Comments: Only 3 latest comments are returned per post, ordered by timestamp.
+    Sorting: Posts are ordered by timestamp, latest first. Comments are also ordered by timestamp, latest first.
+
+
+
+#comments = Comment.objects.filter(post=post).order_by('?')[:3]
+for 3 random comments
